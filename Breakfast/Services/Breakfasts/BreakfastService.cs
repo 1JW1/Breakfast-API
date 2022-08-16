@@ -11,8 +11,19 @@ public class BreakfastService : IBreakfastService
         _breakfasts.Add(aBreakfast.Id, aBreakfast);
     }
 
+    public void DeleteBreakfast(Guid id)
+    {
+        _breakfasts.Remove(id);
+    }
+
     public ABreakfast GetBreakfast(Guid id)
     {
         return _breakfasts[id];
+    }
+
+    public void UpsertBreakfast(ABreakfast breakfast)
+    {
+        // adding breakfast to dictionary
+        _breakfasts[breakfast.Id] = breakfast;
     }
 }
