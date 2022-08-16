@@ -11,6 +11,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 var app = builder.Build();
 {
+    // pipeline that req goes through
+    // UseExceptionHandler() catches exceptions and re-executes request to route we define here
+    // you can then create exception controller
+    app.UseExceptionHandler("/error"); 
+
     app.UseHttpsRedirection();
 
     app.MapControllers();
