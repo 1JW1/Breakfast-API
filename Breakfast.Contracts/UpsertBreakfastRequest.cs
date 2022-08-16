@@ -2,7 +2,7 @@ namespace Breakfast.Contracts.Breakfast;
 
 public record UpsertBreakfastRequest(
     Guid Id,
-    string name,
+    string Name,
     string Description,
     DateTime StartDateTime,
     DateTime LastDateTime,
