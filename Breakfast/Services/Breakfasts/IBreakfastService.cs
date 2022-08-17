@@ -5,8 +5,8 @@ namespace Breakfast.Services.Breakfasts;
 
 public interface IBreakfastService
 {
-    void CreateBreakfast(ABreakfast aBreakfast);
+    ErrorOr<Created> CreateBreakfast(ABreakfast aBreakfast);
     ErrorOr<ABreakfast> GetBreakfast(Guid id);
-    void UpsertBreakfast(ABreakfast breakfast);
-    void DeleteBreakfast(Guid id);
+    ErrorOr<UpsertedBreakfast> UpsertBreakfast(ABreakfast breakfast);
+    ErrorOr<Deleted> DeleteBreakfast(Guid id);
 }
