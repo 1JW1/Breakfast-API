@@ -1,4 +1,6 @@
 using Breakfast.Models;
+using Breakfast.ServiceErrors;
+using ErrorOr;
 
 namespace Breakfast.Services.Breakfasts;
 
@@ -16,9 +18,14 @@ public class BreakfastService : IBreakfastService
         _breakfasts.Remove(id);
     }
 
-    public ABreakfast GetBreakfast(Guid id)
+    public ErrorOr<ABreakfast> GetBreakfast(Guid id)
     {
-        return _breakfasts[id];
+        if(_breakfasts.TryGetValue(id, out var breakfast))
+        {
+            return breakfast;
+        }
+
+        return Errors.Breakfast.NotFound;
     }
 
     public void UpsertBreakfast(ABreakfast breakfast)

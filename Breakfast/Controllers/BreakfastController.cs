@@ -1,6 +1,8 @@
 using Breakfast.Contracts.Breakfast;
 using Breakfast.Models;
+using Breakfast.ServiceErrors;
 using Breakfast.Services.Breakfasts;
+using ErrorOr;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Breakfast.Controllers;
@@ -56,7 +58,14 @@ public class BreakfastsController : ControllerBase
     public IActionResult GetBreakfast(Guid id)
     {   
         // getting the breakfast
-        ABreakfast aBreakfast = _breakfastService.GetBreakfast(id);
+        ErrorOr<ABreakfast> getBreakfastResult = _breakfastService.GetBreakfast(id);
+
+        if (getBreakfastResult.IsError && getBreakfastResult.FirstError == Errors.Breakfast.NotFound)
+        {
+            return NotFound();
+        }
+
+        var aBreakfast = getBreakfastResult.Value;
 
         // mapping the data to an object that can pass through the API 
         var response = new BreakfastResponse(
