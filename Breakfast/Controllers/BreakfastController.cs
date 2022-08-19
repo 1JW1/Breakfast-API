@@ -21,8 +21,7 @@ public class BreakfastsController : ApiController
     public IActionResult CreateBreakfast(CreateBreakfastRequest request)
     {
         // mapping data we get from request to the language our app speaks
-        var breakfast = new ABreakfast(
-            Guid.NewGuid(),
+        ErrorOr<ABreakfast> requestToBreakfastResult = ABreakfast.Create(
             request.Name,
             request.Description,
             request.StartDateTime,
@@ -31,6 +30,13 @@ public class BreakfastsController : ApiController
             request.Savoury,
             request.Sweet
         );
+
+        if (requestToBreakfastResult.IsError)
+        {
+          return Problem(requestToBreakfastResult.Errors);
+        }
+
+        var breakfast = requestToBreakfastResult.Value;
 
         ErrorOr<Created> createBreakfastResult = _breakfastService.CreateBreakfast(breakfast);
 
@@ -55,16 +61,23 @@ public class BreakfastsController : ApiController
     [HttpPut("{id:guid}")]
     public IActionResult UpsertBreakfast(Guid id, UpsertBreakfastRequest request)
     {   
-        var breakfast = new ABreakfast(
-            id,
+            ErrorOr<ABreakfast> requestToBreakfast = ABreakfast.Create(
             request.Name,
             request.Description,
             request.StartDateTime,
             request.LastDateTime,
             DateTime.UtcNow,
             request.Savoury,
-            request.Sweet
+            request.Sweet,
+            id
         );
+
+        if (requestToBreakfast.IsError)
+        {
+          return Problem(requestToBreakfast.Errors);
+        }
+
+        var breakfast = requestToBreakfast.Value;
         
         // todo: return 201 if breakfast was created
         ErrorOr<UpsertedBreakfast> upsertBreakfastResult = _breakfastService.UpsertBreakfast(breakfast);
